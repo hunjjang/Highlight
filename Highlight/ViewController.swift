@@ -74,7 +74,9 @@ class ViewController: UIViewController {
     }
     
     @objc private func logPressTextView(_ longGesture: UILongPressGestureRecognizer) {
-        let locationFromTextView = longGesture.location(in: self.textView)
+        var locationFromTextView = longGesture.location(in: self.textView)
+        //TextView 의 기본 패딩값 8,8,8,8rect
+        locationFromTextView.y -= 8
         
         switch longGesture.state{
         case .ended:
@@ -85,34 +87,20 @@ class ViewController: UIViewController {
             
             var highlightModel: HighlightModel?
             
-            var textRect = CGRect()
+            let glyphIndex = self.textView.layoutManager.glyphIndex(for: self.locationFromTextView!, in: self.textView.textContainer)
             
-            self.textView.layoutManager.enumerateLineFragments(forGlyphRange:
-            NSRange(location: 0,length: textView.text.count)) {
-                [weak self](rect, usedRect, textContainer, glyphRange, stop) in
+            let rect = self.textView.layoutManager.boundingRect(forGlyphRange: NSRange(location: glyphIndex, length: 1), in: self.textView.textContainer)
 
-                guard let self = self else {return}
-                
-                if (self.locationFromTextView?.y ?? 0) < usedRect.maxY {
-                    let lineHeight = (self.textView.font?.lineHeight ?? 0 )
-                    stop.assign(repeating: true, count:  Int((self.locationFromTextView?.y ?? 0) /  lineHeight) + 1)
-                }
-                
-                //TextView 의 기본 패딩값 8,8,8,8rect
-                textRect = usedRect
-                highlightModel = HighlightModel(rect : CGRect(x: 0,
-                                                              y: usedRect.minY + self.view.safeAreaInsets.top + 8,
-                                                              width: usedRect.width,
-                                                              height: usedRect.height) ,
-                                                attributeText:  self.textView.attributedText.attributedSubstring(from: glyphRange))
-                
-                self.selectRange = glyphRange
-            }
+            let glyphRange = self.textView.layoutManager.glyphRange(forBoundingRect: rect, in: self.textView.textContainer)
             
-            self.view.addSubview(dotView)
-            textRect.size = CGSize(width: 3, height: 3)
-            dotView.frame = textRect
+            highlightModel = HighlightModel(rect : CGRect(x: 0,
+                                                          y: rect.minY + self.view.safeAreaInsets.top + 8,
+                                                          width: self.textView.frame.width,
+                                                          height: rect.height) ,
+                                            attributeText:  self.textView.attributedText.attributedSubstring(from: glyphRange))
             
+            self.selectRange = glyphRange
+     
             self.highlightView.changedAttribute = { changedAttributeString in
 
                 self.attributedString.deleteCharacters(in: self.selectRange!)

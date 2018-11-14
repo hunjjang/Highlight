@@ -34,7 +34,6 @@ class HighlightLabel: UILabel {
         let textContainer = NSTextContainer(size: self.frame.size)
         textContainer.lineFragmentPadding = 0
         textContainer.maximumNumberOfLines = 1
-        textContainer.size = self.bounds.size
         
         self.layoutManager = NSLayoutManager()
         self.textStorage?.addLayoutManager(self.layoutManager!)
