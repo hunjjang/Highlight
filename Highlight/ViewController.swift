@@ -16,21 +16,35 @@ class ViewController: UIViewController {
     let textView : UITextView = {
         let tv = UITextView()
         tv.isEditable = false
-        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.isSelectable = false
         
+        tv.textContainer.lineFragmentPadding = 0
         return tv
     }()
+    
+    let backView: HighlightView = {
+        let view = HighlightView()
+        view.isHidden = true
+        
+        return view
+    }()
+    
+    var locationFromTextView: CGPoint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        self.attributedString.addAttribute(.font,
+                                           value: UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium),
+                                           range: NSRange(location: 0, length: self.attributedString.string.count))
+        self.textView.attributedText = attributedString
+        
+        let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(logPressTextView(_:)))
+        self.textView.addGestureRecognizer(longGesture)
         
         self.view.addSubview(textView)
-        textView.attributedText = attributedString
+        self.view.addSubview(backView)
         self.view.setNeedsUpdateConstraints()
-        
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panOnTextView(_:)))
-        self.textView.addGestureRecognizer(panGesture)
     }
     
     override func updateViewConstraints() {
@@ -46,34 +60,57 @@ class ViewController: UIViewController {
                              paddingRight: 16,
                              width: 0,
                              height: 0)
+        
+        self.backView.frame = self.view.frame
     }
     
-    @objc private func panOnTextView(_ panGesture: UIPanGestureRecognizer) {
-        let point = panGesture.location(in: self.textView)
-        let velocity = panGesture.velocity(in: self.textView)
-        self.highlightCharacter(point, velocity)
-    }
-    
-    private func highlightCharacter(_ point :CGPoint, _ velocity : CGPoint) {
-        if let textPosition = self.textView.closestPosition(to: point) {
+    @objc private func logPressTextView(_ longGesture: UILongPressGestureRecognizer) {
+        let locationFromTextView = longGesture.location(in: self.textView)
+        
+        switch longGesture.state{
+        case .ended:
+            self.backView.isHidden = true
+        case .began:
+            self.locationFromTextView = locationFromTextView
             
-            if let textRange = textView.tokenizer.rangeEnclosingPosition(textPosition,
-                                                                         with: .character,
-                                                                         inDirection: UITextDirection(rawValue: 1)){
+            var highlightModel: HighlightModel?
+            
+            self.textView.layoutManager.enumerateLineFragments(forGlyphRange:
+            NSRange(location: 0,length: textView.text.count)) {
+                [weak self](rect, usedRect, textContainer, glyphRange, stop) in
                 
-                let location: Int = self.textView.offset(from: self.textView.beginningOfDocument, to: textRange.start)
-                let length: Int = self.textView.offset(from: textRange.start, to: textRange.end)
+                guard let self = self else {return}
                 
-                let range = NSRange(location: location, length: length)
-                
-                if velocity.x > 0 {
-                    self.attributedString.addAttribute(.backgroundColor, value: UIColor.red, range: range)
-                }else {
-                    self.attributedString.addAttribute(.backgroundColor, value: UIColor.clear, range: range)
+                if let str = self.textView.text {
+                    let strIndex = str.index(str.startIndex, offsetBy: glyphRange.location)
+                    let endIndex = str.index(str.startIndex, offsetBy: glyphRange.location + glyphRange.length - 1)
+                    
+                    if (self.locationFromTextView?.y ?? 0) < usedRect.maxY {
+                        let lineHeight = (self.textView.font?.lineHeight ?? 0 )
+                        stop.assign(repeating: true, count:  Int((self.locationFromTextView?.y ?? 0) /  lineHeight) + 1)
+                    }
+                    highlightModel = HighlightModel(str: String(str[strIndex...endIndex])
+                        ,rect : CGRect(x: 0,
+                                       y: usedRect.minY + self.view.safeAreaInsets.top + 8,
+                                       width: usedRect.width,
+                                       height: usedRect.height))
                 }
-                self.textView.attributedText = self.attributedString
             }
+            if let highlightModel = highlightModel {
+                self.backView.configure(highlight: highlightModel )
+            }
+            
+        case .changed:
+            self.backView.isHidden = false
+            
+            if locationFromTextView.x > self.locationFromTextView!.x {
+                //print("right")
+            }else {
+                //print("left")
+            }
+            
+        default:
+            break
         }
     }
 }
-

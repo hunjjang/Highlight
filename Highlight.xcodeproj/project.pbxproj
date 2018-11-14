@@ -15,6 +15,9 @@
 		A3B1688F219A941600FE694E /* HighlightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1688E219A941600FE694E /* HighlightTests.swift */; };
 		A3B1689A219A941600FE694E /* HighlightUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B16899219A941600FE694E /* HighlightUITests.swift */; };
 		A3B168A9219A947000FE694E /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B168A8219A947000FE694E /* UIView.swift */; };
+		A3B168AD219AB6FC00FE694E /* HighlightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B168AC219AB6FC00FE694E /* HighlightView.swift */; };
+		A3B168AF219BAD8F00FE694E /* HighlightModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B168AE219BAD8F00FE694E /* HighlightModel.swift */; };
+		A3B168B1219BE2AB00FE694E /* HighlightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B168B0219BE2AB00FE694E /* HighlightViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +52,9 @@
 		A3B16899219A941600FE694E /* HighlightUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightUITests.swift; sourceTree = "<group>"; };
 		A3B1689B219A941600FE694E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3B168A8219A947000FE694E /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		A3B168AC219AB6FC00FE694E /* HighlightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightView.swift; sourceTree = "<group>"; };
+		A3B168AE219BAD8F00FE694E /* HighlightModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightModel.swift; sourceTree = "<group>"; };
+		A3B168B0219BE2AB00FE694E /* HighlightViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +108,9 @@
 				A3B168A7219A945D00FE694E /* Extension */,
 				A3B16879219A941500FE694E /* AppDelegate.swift */,
 				A3B1687B219A941500FE694E /* ViewController.swift */,
+				A3B168AC219AB6FC00FE694E /* HighlightView.swift */,
+				A3B168B0219BE2AB00FE694E /* HighlightViewController.swift */,
+				A3B168AE219BAD8F00FE694E /* HighlightModel.swift */,
 				A3B1687D219A941500FE694E /* Main.storyboard */,
 				A3B16880219A941600FE694E /* Assets.xcassets */,
 				A3B16882219A941600FE694E /* LaunchScreen.storyboard */,
@@ -268,6 +277,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3B1687C219A941500FE694E /* ViewController.swift in Sources */,
+				A3B168B1219BE2AB00FE694E /* HighlightViewController.swift in Sources */,
+				A3B168AF219BAD8F00FE694E /* HighlightModel.swift in Sources */,
+				A3B168AD219AB6FC00FE694E /* HighlightView.swift in Sources */,
 				A3B168A9219A947000FE694E /* UIView.swift in Sources */,
 				A3B1687A219A941500FE694E /* AppDelegate.swift in Sources */,
 			);
@@ -445,7 +457,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 66Y39YRG74;
 				INFOPLIST_FILE = Highlight/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -462,7 +476,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 66Y39YRG74;
 				INFOPLIST_FILE = Highlight/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
