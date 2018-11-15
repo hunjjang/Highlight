@@ -17,7 +17,7 @@
 		A3B168A9219A947000FE694E /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B168A8219A947000FE694E /* UIView.swift */; };
 		A3B168AD219AB6FC00FE694E /* HighlightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B168AC219AB6FC00FE694E /* HighlightView.swift */; };
 		A3B168AF219BAD8F00FE694E /* HighlightModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B168AE219BAD8F00FE694E /* HighlightModel.swift */; };
-		A3B168B1219BE2AB00FE694E /* HighlightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B168B0219BE2AB00FE694E /* HighlightViewController.swift */; };
+		A3B168B3219D2E7100FE694E /* HighlightLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B168B2219D2E7100FE694E /* HighlightLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +54,7 @@
 		A3B168A8219A947000FE694E /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		A3B168AC219AB6FC00FE694E /* HighlightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightView.swift; sourceTree = "<group>"; };
 		A3B168AE219BAD8F00FE694E /* HighlightModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightModel.swift; sourceTree = "<group>"; };
-		A3B168B0219BE2AB00FE694E /* HighlightViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightViewController.swift; sourceTree = "<group>"; };
+		A3B168B2219D2E7100FE694E /* HighlightLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +109,7 @@
 				A3B16879219A941500FE694E /* AppDelegate.swift */,
 				A3B1687B219A941500FE694E /* ViewController.swift */,
 				A3B168AC219AB6FC00FE694E /* HighlightView.swift */,
-				A3B168B0219BE2AB00FE694E /* HighlightViewController.swift */,
+				A3B168B2219D2E7100FE694E /* HighlightLabel.swift */,
 				A3B168AE219BAD8F00FE694E /* HighlightModel.swift */,
 				A3B1687D219A941500FE694E /* Main.storyboard */,
 				A3B16880219A941600FE694E /* Assets.xcassets */,
@@ -277,9 +277,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3B1687C219A941500FE694E /* ViewController.swift in Sources */,
-				A3B168B1219BE2AB00FE694E /* HighlightViewController.swift in Sources */,
 				A3B168AF219BAD8F00FE694E /* HighlightModel.swift in Sources */,
 				A3B168AD219AB6FC00FE694E /* HighlightView.swift in Sources */,
+				A3B168B3219D2E7100FE694E /* HighlightLabel.swift in Sources */,
 				A3B168A9219A947000FE694E /* UIView.swift in Sources */,
 				A3B1687A219A941500FE694E /* AppDelegate.swift in Sources */,
 			);

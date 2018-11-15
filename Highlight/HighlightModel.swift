@@ -9,6 +9,6 @@
 import UIKit
 
 struct HighlightModel {
-    let str : String
+    let attributeText : NSAttributedString
     let rect : CGRect
 }

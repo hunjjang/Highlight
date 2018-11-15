@@ -37,6 +37,7 @@ class ViewController: UIViewController {
         self.attributedString.addAttribute(.font,
                                            value: UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium),
                                            range: NSRange(location: 0, length: self.attributedString.string.count))
+        
         self.textView.attributedText = attributedString
         
         let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(logPressTextView(_:)))
@@ -78,36 +79,29 @@ class ViewController: UIViewController {
             self.textView.layoutManager.enumerateLineFragments(forGlyphRange:
             NSRange(location: 0,length: textView.text.count)) {
                 [weak self](rect, usedRect, textContainer, glyphRange, stop) in
-                
+
                 guard let self = self else {return}
                 
-                if let str = self.textView.text {
-                    let strIndex = str.index(str.startIndex, offsetBy: glyphRange.location)
-                    let endIndex = str.index(str.startIndex, offsetBy: glyphRange.location + glyphRange.length - 1)
-                    
-                    if (self.locationFromTextView?.y ?? 0) < usedRect.maxY {
-                        let lineHeight = (self.textView.font?.lineHeight ?? 0 )
-                        stop.assign(repeating: true, count:  Int((self.locationFromTextView?.y ?? 0) /  lineHeight) + 1)
-                    }
-                    highlightModel = HighlightModel(str: String(str[strIndex...endIndex])
-                        ,rect : CGRect(x: 0,
-                                       y: usedRect.minY + self.view.safeAreaInsets.top + 8,
-                                       width: usedRect.width,
-                                       height: usedRect.height))
+                if (self.locationFromTextView?.y ?? 0) < usedRect.maxY {
+                    let lineHeight = (self.textView.font?.lineHeight ?? 0 )
+                    stop.assign(repeating: true, count:  Int((self.locationFromTextView?.y ?? 0) /  lineHeight) + 1)
                 }
+                
+                //TextView 의 기본 패딩값 8,8,8,8
+                highlightModel = HighlightModel(attributeText:  self.textView.attributedText.attributedSubstring(from: glyphRange)
+                    ,rect : CGRect(x: 0,
+                                   y: usedRect.minY + self.view.safeAreaInsets.top + 8,
+                                   width: usedRect.width,
+                                   height: usedRect.height))
             }
+            
             if let highlightModel = highlightModel {
-                self.backView.configure(highlight: highlightModel )
+                self.backView.configure(highlight: highlightModel)
             }
             
         case .changed:
             self.backView.isHidden = false
-            
-            if locationFromTextView.x > self.locationFromTextView!.x {
-                //print("right")
-            }else {
-                //print("left")
-            }
+            self.backView.changeAttributeText(changedX: locationFromTextView.x ,touchX : self.locationFromTextView!.x)
             
         default:
             break
