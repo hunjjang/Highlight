@@ -22,12 +22,15 @@ class HighlightView : UIView{
     
     var changedAttribute = {(attribute: NSMutableAttributedString) -> Void in}
     
+    var startLocation : Int?
+    
+    var endLocation : Int?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor(white: 1, alpha: 0.7)
         
         self.addSubview(backView)
-        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -36,6 +39,8 @@ class HighlightView : UIView{
 
     func configure(highlight : HighlightModel) {
         self.label?.removeFromSuperview()
+        self.startLocation = nil
+        self.endLocation = nil
         
         self.attributedText = highlight.attributeText as? NSMutableAttributedString
             /*
@@ -47,7 +52,6 @@ class HighlightView : UIView{
         
         self.label!.frame = CGRect(x: 16, y: highlight.rect.minY, width: highlight.rect.width, height: highlight.rect.height)
         self.backView.frame = CGRect(x: 0, y: highlight.rect.minY, width: UIScreen.main.bounds.width, height: highlight.rect.height)
-        
     }
     
     func changeAttributeText(changedX: CGFloat , touchX : CGFloat) {
@@ -55,12 +59,19 @@ class HighlightView : UIView{
         if let layoutManager = self.label?.layoutManager {
             let index = layoutManager.characterIndex(for: CGPoint(x: changedX, y: 0), in: layoutManager.textContainers[0], fractionOfDistanceBetweenInsertionPoints: nil)
             
+            if self.startLocation == nil {
+                self.startLocation = index
+            }
+            
             if changedX > touchX {
                 //Right
-                self.attributedText?.addAttributes([.backgroundColor : UIColor.red], range: NSRange(location: index, length: 1))
+                let length = index - (self.startLocation ?? 0)
+                self.endLocation = index
+                self.attributedText?.addAttributes([.backgroundColor : UIColor.red], range: NSRange(location: self.startLocation ?? 0 , length: length + 1))
             }else {
                 //Left
-                self.attributedText?.addAttributes([.backgroundColor : UIColor.white], range: NSRange(location: index, length: 1))
+                self.attributedText?.addAttributes([.backgroundColor : UIColor.white], range: NSRange(location: self.endLocation ?? 0 , length: 1))
+                
             }
             
             self.label?.attributedText = self.attributedText!

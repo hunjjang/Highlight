@@ -35,12 +35,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.attributedString.addAttribute(.font,
-                                           value: UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium),
+                                           value: UIFont.systemFont(ofSize: 17,weight: UIFont.Weight.medium),
                                            range: NSRange(location: 0, length: self.attributedString.string.count))
         
         self.textView.attributedText = attributedString
         
-        let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(logPressTextView(_:)))
+        let longGesture = UILongPressGestureRecognizer(target: self,
+                                                       action: #selector(logPressTextView(_:)))
         self.textView.addGestureRecognizer(longGesture)
         
         self.view.addSubview(textView)
@@ -101,10 +102,13 @@ class ViewController: UIViewController {
             
         case .changed:
             self.backView.isHidden = false
-            self.backView.changeAttributeText(changedX: locationFromTextView.x ,touchX : self.locationFromTextView!.x)
+            self.backView.changeAttributeText(changedX: locationFromTextView.x ,
+                                              touchX : self.locationFromTextView!.x)
             
         default:
             break
         }
     }
 }
+
+
