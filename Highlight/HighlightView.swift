@@ -26,6 +26,8 @@ class HighlightView : UIView{
     
     var endLocation : Int?
     
+    var model : HighlightModel?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor(white: 1, alpha: 0.7)
@@ -52,30 +54,21 @@ class HighlightView : UIView{
         
         self.label!.frame = CGRect(x: 16, y: highlight.rect.minY, width: highlight.rect.width, height: highlight.rect.height)
         self.backView.frame = CGRect(x: 0, y: highlight.rect.minY, width: UIScreen.main.bounds.width, height: highlight.rect.height)
+        
+        self.model = highlight
     }
     
-    func changeAttributeText(changedX: CGFloat , touchX : CGFloat) {
+    func changeAttributeText(changedX: CGFloat) {
         
         if let layoutManager = self.label?.layoutManager {
             let index = layoutManager.characterIndex(for: CGPoint(x: changedX, y: 0), in: layoutManager.textContainers[0], fractionOfDistanceBetweenInsertionPoints: nil)
             
-            if self.startLocation == nil {
-                self.startLocation = index
-            }
-            
-            if changedX > touchX {
-                //Right
-                let length = index - (self.startLocation ?? 0)
-                self.endLocation = index
-                self.attributedText?.addAttributes([.backgroundColor : UIColor.red], range: NSRange(location: self.startLocation ?? 0 , length: length + 1))
-            }else {
-                //Left
-                self.attributedText?.addAttributes([.backgroundColor : UIColor.white], range: NSRange(location: self.endLocation ?? 0 , length: 1))
-                
-            }
-            
-            self.label?.attributedText = self.attributedText!
-            self.changedAttribute(self.attributedText!)
+            self.model?.action(currentAttributeString: self.attributedText!, index: index, output: { attribute in
+                self.attributedText = attribute
+                self.label?.attributedText = self.attributedText!
+                self.changedAttribute(self.attributedText!)
+            })
         }
     }
 }
+

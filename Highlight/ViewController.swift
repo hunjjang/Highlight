@@ -31,12 +31,13 @@ class ViewController: UIViewController {
     
     var locationFromTextView: CGPoint?
     
+    var selectRange: NSRange?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.attributedString.addAttribute(.font,
-                                           value: UIFont.systemFont(ofSize: 17,weight: UIFont.Weight.medium),
-                                           range: NSRange(location: 0, length: self.attributedString.string.count))
+        self.attributedString.addAttributes([.font : UIFont.systemFont(ofSize: 17,weight: UIFont.Weight.medium),
+                                             .backgroundColor : UIColor.white], range: NSRange(location: 0, length: self.attributedString.string.count))
         
         self.textView.attributedText = attributedString
         
@@ -72,6 +73,16 @@ class ViewController: UIViewController {
         switch longGesture.state{
         case .ended:
             self.backView.isHidden = true
+            self.backView.changedAttribute = { changedAttributeString in
+
+                //let attribute = self.attributedString.attributedSubstring(from: self.selectRange!)
+                self.attributedString.deleteCharacters(in: self.selectRange!)
+                self.attributedString.insert(changedAttributeString, at: self.selectRange!.location)
+                
+                self.textView.attributedText = self.attributedString
+                
+            }
+            
         case .began:
             self.locationFromTextView = locationFromTextView
             
@@ -88,22 +99,24 @@ class ViewController: UIViewController {
                     stop.assign(repeating: true, count:  Int((self.locationFromTextView?.y ?? 0) /  lineHeight) + 1)
                 }
                 
-                //TextView 의 기본 패딩값 8,8,8,8
-                highlightModel = HighlightModel(attributeText:  self.textView.attributedText.attributedSubstring(from: glyphRange)
-                    ,rect : CGRect(x: 0,
+                //TextView 의 기본 패딩값 8,8,8,8rect
+                highlightModel = HighlightModel(rect : CGRect(x: 0,
                                    y: usedRect.minY + self.view.safeAreaInsets.top + 8,
                                    width: usedRect.width,
-                                   height: usedRect.height))
+                                   height: usedRect.height),
+                                                attributeText:  self.textView.attributedText.attributedSubstring(from: glyphRange))
+                
+                self.selectRange = glyphRange
             }
             
             if let highlightModel = highlightModel {
                 self.backView.configure(highlight: highlightModel)
+                
             }
             
         case .changed:
             self.backView.isHidden = false
-            self.backView.changeAttributeText(changedX: locationFromTextView.x ,
-                                              touchX : self.locationFromTextView!.x)
+            self.backView.changeAttributeText(changedX: locationFromTextView.x)
             
         default:
             break
