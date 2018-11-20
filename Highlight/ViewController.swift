@@ -22,7 +22,7 @@ class ViewController: UIViewController {
         return tv
     }()
     
-    let backView: HighlightView = {
+    let highlightView: HighlightView = {
         let view = HighlightView()
         view.isHidden = true
         
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         self.textView.addGestureRecognizer(longGesture)
         
         self.view.addSubview(textView)
-        self.view.addSubview(backView)
+        self.view.addSubview(highlightView)
         self.view.setNeedsUpdateConstraints()
     }
     
@@ -64,7 +64,7 @@ class ViewController: UIViewController {
                              width: 0,
                              height: 0)
         
-        self.backView.frame = self.view.frame
+        self.highlightView.frame = self.view.frame
     }
     
     @objc private func logPressTextView(_ longGesture: UILongPressGestureRecognizer) {
@@ -72,16 +72,8 @@ class ViewController: UIViewController {
         
         switch longGesture.state{
         case .ended:
-            self.backView.isHidden = true
-            self.backView.changedAttribute = { changedAttributeString in
-
-                //let attribute = self.attributedString.attributedSubstring(from: self.selectRange!)
-                self.attributedString.deleteCharacters(in: self.selectRange!)
-                self.attributedString.insert(changedAttributeString, at: self.selectRange!.location)
-                
-                self.textView.attributedText = self.attributedString
-                
-            }
+            self.highlightView.isHidden = true
+            
             
         case .began:
             self.locationFromTextView = locationFromTextView
@@ -109,14 +101,22 @@ class ViewController: UIViewController {
                 self.selectRange = glyphRange
             }
             
+            self.highlightView.changedAttribute = { changedAttributeString in
+                
+                self.attributedString.deleteCharacters(in: self.selectRange!)
+                self.attributedString.insert(changedAttributeString, at: self.selectRange!.location)
+                
+                self.textView.attributedText = self.attributedString
+            }
+            
             if let highlightModel = highlightModel {
-                self.backView.configure(highlight: highlightModel)
+                self.highlightView.configure(highlight: highlightModel)
                 
             }
             
         case .changed:
-            self.backView.isHidden = false
-            self.backView.changeAttributeText(changedX: locationFromTextView.x)
+            self.highlightView.isHidden = false
+            self.highlightView.changeAttributeText(changedX: locationFromTextView.x)
             
         default:
             break

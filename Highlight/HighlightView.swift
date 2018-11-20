@@ -45,10 +45,7 @@ class HighlightView : UIView{
         self.endLocation = nil
         
         self.attributedText = highlight.attributeText as? NSMutableAttributedString
-            /*
-            NSMutableAttributedString(string: highlight.str,
-                                                        attributes: [.font : UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.medium)])
-                                                                                                                                           */
+        
         self.label = HighlightLabel(attributedText : self.attributedText!)
         self.addSubview(label!)
         
