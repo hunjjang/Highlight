@@ -10,6 +10,10 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    var locationFromTextView: CGPoint?
+    
+    var selectRange: NSRange?
+    
     let attributedString = NSMutableAttributedString(string: "Here is what the Documentation looks like :Returns the index of the character falling under the given point,expressed in the given container's coordinate system.If no character is under the point, the nearest character is returned,where nearest is defined according to the requirements of selection by touch or mouse.This is not simply equivalent to taking the result of the correspondingglyph index method and converting it to a character index, because in somecases a single glyph represents more than one selectable character, for example an fi ligature glyph.In that case, there will be an insertion point within the glyphand this method will return one character or the other, depending on whether the specifiedpoint lies to the left or the right of that insertion point.In general, this method will return only character indexes for which thereis an insertion point (see next method).  The partial fraction is a fraction of the distancefrom the insertion point logically before the given character to the next one,which may be either to the right or to the left depending on directionality."
     )
     
@@ -22,6 +26,12 @@ class ViewController: UIViewController {
         return tv
     }()
     
+    let dotView : UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        return view
+    }()
+    
     let highlightView: HighlightView = {
         let view = HighlightView()
         view.isHidden = true
@@ -29,15 +39,11 @@ class ViewController: UIViewController {
         return view
     }()
     
-    var locationFromTextView: CGPoint?
-    
-    var selectRange: NSRange?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.attributedString.addAttributes([.font : UIFont.systemFont(ofSize: 17,weight: UIFont.Weight.medium),
-                                             .backgroundColor : UIColor.white], range: NSRange(location: 0, length: self.attributedString.string.count))
+        self.attributedString.addAttributes([.font : UIFont.systemFont(ofSize: 17,weight: UIFont.Weight.medium),.backgroundColor : UIColor.white],
+                                            range: NSRange(location: 0, length: self.attributedString.string.count))
         
         self.textView.attributedText = attributedString
         
@@ -73,12 +79,13 @@ class ViewController: UIViewController {
         switch longGesture.state{
         case .ended:
             self.highlightView.isHidden = true
-            
-            
+        
         case .began:
             self.locationFromTextView = locationFromTextView
             
             var highlightModel: HighlightModel?
+            
+            var textRect = CGRect()
             
             self.textView.layoutManager.enumerateLineFragments(forGlyphRange:
             NSRange(location: 0,length: textView.text.count)) {
@@ -92,17 +99,22 @@ class ViewController: UIViewController {
                 }
                 
                 //TextView 의 기본 패딩값 8,8,8,8rect
+                textRect = usedRect
                 highlightModel = HighlightModel(rect : CGRect(x: 0,
-                                   y: usedRect.minY + self.view.safeAreaInsets.top + 8,
-                                   width: usedRect.width,
-                                   height: usedRect.height),
+                                                              y: usedRect.minY + self.view.safeAreaInsets.top + 8,
+                                                              width: usedRect.width,
+                                                              height: usedRect.height) ,
                                                 attributeText:  self.textView.attributedText.attributedSubstring(from: glyphRange))
                 
                 self.selectRange = glyphRange
             }
             
+            self.view.addSubview(dotView)
+            textRect.size = CGSize(width: 3, height: 3)
+            dotView.frame = textRect
+            
             self.highlightView.changedAttribute = { changedAttributeString in
-                
+
                 self.attributedString.deleteCharacters(in: self.selectRange!)
                 self.attributedString.insert(changedAttributeString, at: self.selectRange!.location)
                 
@@ -111,7 +123,6 @@ class ViewController: UIViewController {
             
             if let highlightModel = highlightModel {
                 self.highlightView.configure(highlight: highlightModel)
-                
             }
             
         case .changed:
@@ -123,5 +134,3 @@ class ViewController: UIViewController {
         }
     }
 }
-
-

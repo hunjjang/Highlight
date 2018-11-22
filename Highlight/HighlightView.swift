@@ -21,11 +21,7 @@ class HighlightView : UIView{
     var attributedText : NSMutableAttributedString?
     
     var changedAttribute = {(attribute: NSMutableAttributedString) -> Void in}
-    
-    var startLocation : Int?
-    
-    var endLocation : Int?
-    
+
     var model : HighlightModel?
     
     override init(frame: CGRect) {
@@ -41,8 +37,6 @@ class HighlightView : UIView{
 
     func configure(highlight : HighlightModel) {
         self.label?.removeFromSuperview()
-        self.startLocation = nil
-        self.endLocation = nil
         
         self.attributedText = highlight.attributeText as? NSMutableAttributedString
         
@@ -61,6 +55,7 @@ class HighlightView : UIView{
             let index = layoutManager.characterIndex(for: CGPoint(x: changedX, y: 0), in: layoutManager.textContainers[0], fractionOfDistanceBetweenInsertionPoints: nil)
             
             self.model?.action(currentAttributeString: self.attributedText!, index: index, output: { attribute in
+            
                 self.attributedText = attribute
                 self.label?.attributedText = self.attributedText!
                 self.changedAttribute(self.attributedText!)
