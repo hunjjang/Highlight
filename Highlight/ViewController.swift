@@ -23,6 +23,7 @@ class ViewController: UIViewController {
         tv.isSelectable = false
         
         tv.textContainer.lineFragmentPadding = 0
+        tv.textContainerInset = .zero
         return tv
     }()
     
@@ -74,9 +75,7 @@ class ViewController: UIViewController {
     }
     
     @objc private func logPressTextView(_ longGesture: UILongPressGestureRecognizer) {
-        var locationFromTextView = longGesture.location(in: self.textView)
-        //TextView 의 기본 패딩값 8,8,8,8rect
-        locationFromTextView.y -= 8
+         let locationFromTextView = longGesture.location(in: self.textView)
         
         switch longGesture.state{
         case .ended:
@@ -87,14 +86,17 @@ class ViewController: UIViewController {
             
             var highlightModel: HighlightModel?
             
-            let glyphIndex = self.textView.layoutManager.glyphIndex(for: self.locationFromTextView!, in: self.textView.textContainer)
+            let glyphIndex = self.textView.layoutManager.glyphIndex(for: self.locationFromTextView!,
+                                                                    in: self.textView.textContainer)
             
-            let rect = self.textView.layoutManager.boundingRect(forGlyphRange: NSRange(location: glyphIndex, length: 1), in: self.textView.textContainer)
+            let rect = self.textView.layoutManager.boundingRect(forGlyphRange: NSRange(location: glyphIndex, length: 1),
+                                                                in: self.textView.textContainer)
 
-            let glyphRange = self.textView.layoutManager.glyphRange(forBoundingRect: rect, in: self.textView.textContainer)
+            let glyphRange = self.textView.layoutManager.glyphRange(forBoundingRect: rect,
+                                                                    in: self.textView.textContainer)
             
             highlightModel = HighlightModel(rect : CGRect(x: 0,
-                                                          y: rect.minY + self.view.safeAreaInsets.top + 8,
+                                                          y: rect.minY + self.view.safeAreaInsets.top,
                                                           width: self.textView.frame.width,
                                                           height: rect.height) ,
                                             attributeText:  self.textView.attributedText.attributedSubstring(from: glyphRange))
